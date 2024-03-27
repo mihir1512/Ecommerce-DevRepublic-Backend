@@ -1,4 +1,4 @@
-const PurchaseHistory=require("../models/PurchaseHistory")
+const PurchaseHistory = require("../models/PurchaseHistory")
 
 
 // Get all purchase history
@@ -13,8 +13,11 @@ exports.getPurchaseHistory = async (req, res) => {
 
 // Create a new purchase history entry
 exports.createPurchaseHistory = async (req, res) => {
-    const { products, totalAmount } = req.body;
-    const newPurchaseHistory = new PurchaseHistory({products,totalAmount});
+
+    console.log(req.body)
+
+    const { products, user_id } = req.body;
+    const newPurchaseHistory = new PurchaseHistory({ products, userId: user_id });
 
     try {
         const savedPurchaseHistory = await newPurchaseHistory.save();
@@ -28,6 +31,32 @@ exports.createPurchaseHistory = async (req, res) => {
 exports.getPurchaseHistoryById = async (req, res) => {
     try {
         const purchaseHistory = await PurchaseHistory.findById(req.params.id);
+        if (!purchaseHistory) {
+            return res.status(404).json({ message: 'Purchase history not found' });
+        }
+        res.status(200).json(purchaseHistory);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};
+exports.getPurchaseHistoryByUserId = async (req, res) => {
+    try {
+        const purchaseHistory = await PurchaseHistory.findOne({
+            userId: req.body.user_id
+        });
+        if (!purchaseHistory) {
+            return res.status(404).json({ message: 'Purchase history not found' });
+        }
+        res.status(200).json(purchaseHistory);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};
+exports.updatePurchaseHistoryByUserId = async (req, res) => {
+    try {
+        const purchaseHistory = await PurchaseHistory.findOne({
+            userId: req.body.user_id
+        });
         if (!purchaseHistory) {
             return res.status(404).json({ message: 'Purchase history not found' });
         }
