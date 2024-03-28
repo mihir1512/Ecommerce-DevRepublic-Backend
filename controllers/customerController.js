@@ -1,5 +1,6 @@
 const { jwtSecret } = require("../config");
 const Customer = require("../models/Customer")
+const Cart=require("../models/Cart")
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
 exports.registerCustomer = async (req, res) => {
@@ -19,7 +20,12 @@ exports.registerCustomer = async (req, res) => {
             password: encryptPassword
         });
         console.log(`[Customer]-${JSON.stringify(customer)}`);
-        res.status(200).json(customer);
+        const newCart = new Cart({userId:customer.id, products:[],netAmount:0 });
+
+        const savedCart = await newCart.save();
+        console.log([`[Saved Cart]-[${JSON.stringify(savedCart)}]`])
+              
+       res.status(200).json(customer);
     } catch (error) {
         res.status(500).json({ message: error.message });
     }

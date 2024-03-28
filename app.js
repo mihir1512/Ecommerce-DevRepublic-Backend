@@ -5,6 +5,7 @@ const cors = require('cors')
 const productRoutes = require('./routes/productRoutes');
 const purchaseHistoryRoutes = require('./routes/purchaseHistoryRoutes');
 const customerRoutes = require('./routes/customerRoutes');
+const cartRoutes=require('./routes/cartRoutes')
 const config = require('./config');
 
 const app = express();
@@ -14,6 +15,7 @@ app.use(express.json());
 app.use('/products', productRoutes);
 app.use('/purchase-history', purchaseHistoryRoutes);
 app.use('/customer', customerRoutes);
+app.use('/cart',cartRoutes)
 
 mongoose.connect(config.mongoURI)
     .then(() => {
