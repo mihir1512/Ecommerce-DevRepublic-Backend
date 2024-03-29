@@ -7,9 +7,10 @@ const purchaseHistorySchema = new mongoose.Schema({
             quantity: { type: Number, required: true },
         }
     ],
-    purchaseDate: { type: Date, default: null },
+    purchaseDate: { type: Date, default: new  Date() },
     userId: { type: mongoose.Schema.Types.ObjectId, ref: 'Customer', required: true },
-    netAmount:{type:Number,required:true}
+    netAmount:{type:Number,required:true},
+    payment:{type:Boolean,default:true}
 });
 
 module.exports = mongoose.model('PurchaseHistory', purchaseHistorySchema);

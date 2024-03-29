@@ -1,5 +1,5 @@
 const PurchaseHistory = require("../models/PurchaseHistory")
-
+const Cart=require("../models/Cart")
 
 // Get all purchase history
 exports.getPurchaseHistory = async (req, res) => {
@@ -13,14 +13,18 @@ exports.getPurchaseHistory = async (req, res) => {
 
 // Create a new purchase history entry
 exports.createPurchaseHistory = async (req, res) => {
-
-    console.log(req.body)
-
-    const { products, user_id } = req.body;
-    const newPurchaseHistory = new PurchaseHistory({ products, userId: user_id });
-
     try {
+        console.log(`[Controller]-[createPurchaseHistory]`)
+        const { user_id,netAmount } = req.body;
+        const cartValue=await Cart.findOne({userId:user_id})
+        // cartValue=response[0]
+        console.log(cartValue);
+    
+        const newPurchaseHistory = new PurchaseHistory({ products:cartValue.products,userId:user_id,netAmount:netAmount,purchaseDate:new Date(),payment:true});
+
         const savedPurchaseHistory = await newPurchaseHistory.save();
+        const updatedCart= await Cart.deleteOne({userId:user_id})
+        // console.log(updatedCart);
         res.status(201).json(savedPurchaseHistory);
     } catch (error) {
         res.status(400).json({ message: error.message });

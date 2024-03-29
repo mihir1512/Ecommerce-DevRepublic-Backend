@@ -12,6 +12,47 @@ exports.getProducts = async (req, res) => {
         res.status(500).json({ message: error.message });
     }
 };
+exports.getProductsByFilter=async(req,res)=>{
+    try {
+        console.log(`[controller]-[Get Products By Filter]`)
+        
+        if(req.query.category && req.query.price)
+        {
+            const minPrice=req.query.mnPrice
+            const maxPrice=req.query.mxPrice
+            const products = await Product.find( {
+                category: req.query.category,
+                price: { $gte: minPrice, $lte: maxPrice }     
+            })
+            console.log(`[Products]-${JSON.stringify(products)}`);
+            return  res.status(200).json(products);
+       }
+       else if(req.query.category)
+       {
+            const products = await Product.find( {category: req.query.category})
+            console.log(`[Products]-${JSON.stringify(products)}`);
+            return  res.status(200).json(products);
+       }
+       else if(req.query.price)
+       {
+        const minPrice=req.query.mnPrice
+        const maxPrice=req.query.mxPrice
+        const products = await Product.find( {
+            price: { $gte: minPrice, $lte: maxPrice }     
+        })
+        console.log(`[Products]-${JSON.stringify(products)}`);
+        return  res.status(200).json(products);
+       }
+       else
+       {
+        return res.json({message:"Please pass filter parameter"})
+       }
+
+     } catch (error) {
+        
+        res.status(500).json({ message: error.message });
+    }
+}
 
 // Product Creation
 exports.createProduct = async (req, res) => {

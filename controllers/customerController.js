@@ -20,10 +20,10 @@ exports.registerCustomer = async (req, res) => {
             password: encryptPassword
         });
         console.log(`[Customer]-${JSON.stringify(customer)}`);
-        const newCart = new Cart({userId:customer.id, products:[],netAmount:0 });
+        // const newCart = new Cart({userId:customer.id, products:[],netAmount:0 });
 
-        const savedCart = await newCart.save();
-        console.log([`[Saved Cart]-[${JSON.stringify(savedCart)}]`])
+        // const savedCart = await newCart.save();
+        // console.log([`[Saved Cart]-[${JSON.stringify(savedCart)}]`])
               
        res.status(200).json(customer);
     } catch (error) {
@@ -52,7 +52,7 @@ exports.loginCustomer = async (req, res) => {
         const generateToken = await jwt.sign({
             userId: checkEmail._id,
         }, jwtSecret, {
-            expiresIn: '1h'
+            expiresIn: '77h'
         })
 
         console.log(`[Customer]-${JSON.stringify(checkEmail)}`);
